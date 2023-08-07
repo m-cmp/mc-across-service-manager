@@ -1,0 +1,1 @@
+# mc-across-service-manager
