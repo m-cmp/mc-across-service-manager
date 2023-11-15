@@ -1,0 +1,18 @@
+{
+    "service_template_id" : "2",
+    "service_template_name" : "GCP_compute_with_webserver",
+    "service_template_contents" : "GCP의 vm에 웹서버, DB",
+    "across_service_type" : "none",
+    "cloud_provider" : ["GCP"],
+    "tf_path" : {
+        "vpc" : {
+            "GCP" : "/root/mcmp/multicloud/source/gcp/vpc.tf"
+        },
+        "vm" : {
+            "GCP" : "/root/mcmp/multicloud/source/gcp/vm.tf"
+        }
+    },
+    "application" : {
+        "GCP" : "WEB+DB"
+    }
+}

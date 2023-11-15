@@ -1,0 +1,24 @@
+{
+    "service_template_id" : "5",
+    "service_template_name" : "GCP_compute_and_AZURE_compute_across_service",
+    "service_template_contents" : "GCP의 compute와 AZURE compute에 gslb 연계서비스",
+    "across_service_type" : "gslb",
+    "cloud_provider" : ["GCP", "AZURE"],
+    "tf_path" : {
+        "vpc" : {
+            "GCP" : "/root/mcmp/multicloud/source/gcp/vpc.tf",
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vpc.tf"
+        },
+        "vm" : {
+            "GCP" : "/root/mcmp/multicloud/source/gcp/vm.tf",
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vm.tf"
+        },
+        "gslb" : {
+            "AZURE" : "/root/mcmp/multicloud/source/azure/gslb.tf"
+		}
+    },
+    "application" : {
+        "GCP" : "WEB+DB", 
+        "AZURE" : "WEB+DB"
+    }
+}

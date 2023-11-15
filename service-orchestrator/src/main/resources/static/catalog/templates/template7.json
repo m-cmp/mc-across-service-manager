@@ -1,0 +1,28 @@
+{
+    "service_template_id" : "7",
+    "service_template_name" : "AWS_vm_and_AZURE_compute_across_service",
+    "service_template_contents" : "AWS EC2와 AZURE compute에 vpn-tunnel 연계서비스",
+    "across_service_type" : "vpn_tunnel",
+    "cloud_provider" : ["AWS", "AZURE"],
+    "tf_path" : {
+        "vpc" : {
+            "AWS" : "/root/mcmp/multicloud/source/aws/vpc.tf",
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vpc.tf"
+        },
+        "vgw" : {
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vgw.tf"
+        },
+        "vm" : {
+            "AWS" : "/root/mcmp/multicloud/source/aws/vm.tf",
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vm.tf"
+        },
+        "vpn" : {
+            "AWS" : "/root/mcmp/multicloud/source/aws/vpn.tf",
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vpn.tf"
+        }
+    },
+    "application" : {
+        "AWS" : "WEB", 
+        "AZURE" : "DB"
+    }
+}

@@ -1,0 +1,63 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.3'
+	id 'io.spring.dependency-management' version '1.1.3'
+}
+
+bootJar {
+	archiveFileName = "${rootProject.name}.jar"
+}
+
+jar {
+	enabled = false
+}
+
+group = 'com.mcmp'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+// buildDir 설정 추가
+buildDir = file('build')
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	all*.exclude group: 'org.springframework.boot', module: 'logback-classic'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//MariaDB
+	implementation 'org.mariadb.jdbc:mariadb-java-client'
+	//Logging
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	//Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	//Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
+	//Lombok
+	//compileOnly 'org.projectlombok:lombok:1.18.20'
+	//annotationProcessor 'org.projectlombok:lombok:1.18.20'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation "com.influxdb:influxdb-client-java:6.10.0"
+    // https://mvnrepository.com/artifact/com.influxdb/flux-dsl
+	implementation 'com.influxdb:flux-dsl:6.10.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

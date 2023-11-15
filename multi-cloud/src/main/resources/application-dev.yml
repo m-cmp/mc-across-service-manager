@@ -1,0 +1,60 @@
+# 사용자 정의 설정
+terraform: # rest-api 주소
+  path: ${BASE_DIR}/terraform/services
+  
+aws:
+  access_key: ${AWS_ACCESS_KEY_ID}
+  secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+    
+azure:
+  subscription_id: ${ARM_SUBSCRIPTION_ID}
+  tenant_id: ${ARM_TENANT_ID}
+  client_id: ${ARM_CLIENT_ID}
+  client_secret: ${ARM_CLIENT_SECRET}
+  
+gcp:
+  credential_path: ${GOOGLE_CLOUD_KEYFILE_JSON}
+    
+server:
+  port: 8091
+  
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${IP}:3306/inventory?characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  messages:
+    basename: messages
+    encoding: utf-8
+    cache-duration: 3 # default는 forever
+  
+# Swagger
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  packages-to-scan: com.mcmp.multiCloud
+  swagger-ui:
+    path: /
+    display-request-duration: true
+    groups-order: desc
+    operations-sorter: alpha
+    disable-swagger-default-url: true
+  api-docs:
+    groups:
+      enabled: true
+
+logging:
+  config: classpath:log4j2-dev.xml
+      

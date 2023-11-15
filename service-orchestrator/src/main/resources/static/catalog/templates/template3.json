@@ -1,0 +1,18 @@
+{
+    "service_template_id" : "3",
+    "service_template_name" : "AZURE_comppute_with_webserver",
+    "service_template_contents" : "AZURE의 vm 인스턴스에 웹서버, DB",
+    "across_service_type" : "none",
+    "cloud_provider" : ["AZURE"],
+    "tf_path" : {
+        "vpc" : {
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vpc.tf"
+        },
+        "vm" : {
+            "AZURE" : "/root/mcmp/multicloud/source/azure/vm.tf"
+        }
+    },
+    "application" : {
+        "AZURE" : "WEB+DB"
+    }
+}
