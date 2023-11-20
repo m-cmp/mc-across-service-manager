@@ -1,0 +1,24 @@
+{
+    "service_template_id" : "6",
+    "service_template_name" : "AWS_EC2_and_GCP_compute_across_service",
+    "service_template_contents" : "AWS의 EC2와 GCP compute에 gslb 연계서비스",
+    "across_service_type" : "gslb",
+    "cloud_provider" : ["AWS", "GCP"],
+    "tf_path" : {
+        "vpc" : {
+            "AWS" : "/terraform/source/aws/vpc.tf",
+            "GCP" : "/terraform/source/gcp/vpc.tf"
+        },
+        "vm" : {
+            "AWS" : "/terraform/source/aws/vm.tf",
+            "GCP" : "/terraform/source/gcp/vm.tf"
+        },
+        "gslb" : {
+			"AWS" : "/terraform/source/aws/gslb.tf"
+		}
+    },
+    "application" : {
+        "AWS" : "WEB+DB", 
+        "GCP" : "WEB+DB"
+    }
+}

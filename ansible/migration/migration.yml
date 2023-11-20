@@ -1,0 +1,35 @@
+---
+- name: data dump
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: restore script
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/restore.sh"
+        dest: /usr/local/sbin
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: create dir for backup data
+      file:
+        path: /root/mongo_backup/
+        state: directory
+
+    - name: Transfer the backup file to remote host
+      copy:
+        src: "{{ dir_path }}"
+        dest: /root/mongo_backup/데이터베이스.tar or tar.gz
+
+    - name: Unzip the backup file on remote host
+      unarchive:
+        src: /root/mongo_backup/데이터베이스.tar or tar.gz
+        dest: /root/mongo_backup/
+        remote_src: true
+
+    - name: run script
+      shell:
+        cmd: |
+          /usr/local/sbin/restore.sh        
+

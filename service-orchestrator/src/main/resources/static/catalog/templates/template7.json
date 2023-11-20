@@ -1,0 +1,28 @@
+{
+    "service_template_id" : "7",
+    "service_template_name" : "AWS_vm_and_AZURE_compute_across_service",
+    "service_template_contents" : "AWS EC2와 AZURE compute에 vpn-tunnel 연계서비스",
+    "across_service_type" : "vpn_tunnel",
+    "cloud_provider" : ["AWS", "AZURE"],
+    "tf_path" : {
+        "vpc" : {
+            "AWS" : "/terraform/source/aws/vpc.tf",
+            "AZURE" : "/terraform/source/azure/vpc.tf"
+        },
+        "vgw" : {
+            "AZURE" : "/terraform/source/azure/vgw.tf"
+        },
+        "vm" : {
+            "AWS" : "/terraform/source/aws/vm.tf",
+            "AZURE" : "/terraform/source/azure/vm.tf"
+        },
+        "vpn" : {
+            "AWS" : "/terraform/source/aws/vpn.tf",
+            "AZURE" : "/terraform/source/azure/vpn.tf"
+        }
+    },
+    "application" : {
+        "AWS" : "WEB", 
+        "AZURE" : "DB"
+    }
+}

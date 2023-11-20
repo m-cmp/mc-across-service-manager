@@ -1,0 +1,71 @@
+# Configuration for telegraf agent
+[agent]
+  interval = "10s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+  hostname = ""
+  omit_hostname = false
+
+[[outputs.influxdb_v2]]
+  ## The URLs of the InfluxDB cluster nodes.
+  urls = ["http://${IP}:8086/"]
+  token = "${INFLUXDB_TOKEN}"
+  organization = "${INFLUXDB_ORG}"
+  bucket = "${INFLUXDB_BUCKET}"
+
+# Read metrics about cpu usage
+[[inputs.cpu]]
+  percpu = true
+  totalcpu = true
+  collect_cpu_time = false
+  report_active = false
+  core_tags = false
+
+# Read TCP metrics such as established, time wait and sockets counts.
+[[inputs.netstat]]
+  # no configuration
+
+[[inputs.net]]
+
+# Read metrics about disk usage by mount point
+[[inputs.disk]]
+  ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+
+# Read metrics about disk IO by device
+[[inputs.diskio]]
+  ## By default, telegraf will gather stats for all devices including
+
+# Read metrics about memory usage
+[[inputs.mem]]
+  # no configuration
+
+# Get the number of processes and group them by status
+[[inputs.processes]]
+  # no configuration
+
+# Monitor process cpu and memory usage
+[[inputs.procstat]]
+  exe = "telegraf"
+
+[[inputs.system]]
+    # no configuration
+
+[[inputs.ping]]
+  # ["34.42.63.199"]
+  urls = ["{{PING_TARGET_URLS}}"]
+
+[[inputs.net_response]]
+  protocol = "tcp"
+  # DB or Nginx 포트 번호로 ex) "localhost:80"
+  address = "{{NET_RESPONSE_ADDRESS}}"
+
+# Nginx -> WebServer를 사용하는 경우에만 해당 (/nginx_status 경로로 설정해야 수집됨)
+[[inputs.nginx]]
+  # ex) ["http://localhost:80/nginx_status"]
+  urls = ["http://localhost:80/nginx_status"]
+  response_timeout = "5s"

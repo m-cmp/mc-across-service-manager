@@ -1,0 +1,24 @@
+---
+- name: rm nginx conf
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+
+- name: rm nginx enabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: copy web conf file
+  copy:
+    src: "{{ lookup('env', 'BASE_DIR')}}/ansible/service/myapp.conf"
+    dest: /etc/nginx/sites-available/myapp.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: create symbolic
+  file:
+    src: /etc/nginx/sites-available/myapp.conf
+    dest: /etc/nginx/sites-enabled/myapp.conf
+    state: link

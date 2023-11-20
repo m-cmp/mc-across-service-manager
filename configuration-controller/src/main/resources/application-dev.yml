@@ -1,0 +1,59 @@
+# ==================================
+# Spring Boot Dev Config
+# ==================================
+
+server:
+  port: 8092
+
+ansible-playbook:
+  base-dir: ${BASE_DIR}/ansible
+
+spring:
+  pid:
+    file:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${IP}:3306/inventory?characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true #To beautify or pretty print the SQL
+  messages:
+    basename: messages
+    encoding: utf-8
+    cache-duration: 3 # default는 forever
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+# Swagger
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  packages-to-scan: com.mcmp.confController
+  swagger-ui:
+    path: /
+    display-request-duration: true
+    groups-order: desc
+    operations-sorter: alpha
+    disable-swagger-default-url: true
+  api-docs:
+    groups:
+      enabled: true
+
+logging:
+  config: classpath:log4j2-dev.xml
+
+web:
+  ip: ${IP}

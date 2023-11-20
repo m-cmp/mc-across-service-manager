@@ -1,0 +1,17 @@
+---
+- hosts: all 
+  become: true
+  tasks:
+    - name: Get service facts
+      service_facts:
+
+    - name: Check if MongoDB is active
+      fail:
+        msg: "MongoDB service is not active"
+      when: ansible_facts.services['mongod.service'].state != 'running'
+
+    - name: Check if Nginx is active
+      fail:
+        msg: "Nginx service is not active"
+      when: ansible_facts.services['nginx.service'].state != 'running'
+

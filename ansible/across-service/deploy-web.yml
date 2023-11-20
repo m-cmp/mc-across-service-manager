@@ -1,0 +1,85 @@
+---
+- name: deploy web
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+      
+    - name: install essential package
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/install-essential.sh"
+        dest: /usr/local/sbin/
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: run script
+      shell:
+        cmd: |
+          /usr/local/sbin/install-essential.sh
+   
+    - name: gather_facts
+      setup:
+
+    - block:     
+        - name: nodejs script for ubuntu
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/ubuntu-nodejs.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/ubuntu-nodejs.sh
+    
+      when: ansible_distribution == "Ubuntu"
+
+    - block:  
+        - name: nodejs script for centos
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/centos-nodejs.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+        
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/centos-nodejs.sh
+
+      when: ansible_distribution == "CentOS"
+
+    - name: copy web project
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/webserver.zip"
+        dest: /root/
+
+    - name: create dir
+      file:
+        path: /root/webserver/
+        state: directory
+
+    - name: unzip web project
+      unarchive:
+        src: /root/webserver.zip
+        dest: /root/webserver/
+        remote_src: yes
+    
+    - name: install bind db 
+      shell: |
+        npm install
+      args:
+        chdir: /root/webserver
+ 
+    - name: install web
+      shell: |
+        npm install
+      args:
+        chdir: /root/webserver/client
+
+    - name: copy conf file
+      include_tasks: "{{ lookup('env', 'BASE_DIR')}}/ansible/across-service/copyWebconf.yml"

@@ -1,0 +1,13 @@
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - cd webserver
+    - gradle wrapper
+    - echo "Build Start webserver"
+    - ./gradlew build
+  artifacts:
+    paths:
+      - build/libs/*SNAPSHOT.jar

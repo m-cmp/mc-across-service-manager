@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" monitorInterval="30">
+	<profile>dev</profile>
+	<Properties>
+		<Property name="LOG_FORMAT">%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Property>
+		<!--<Property name="BASE_DIR">/root/mcmp/log/multicloud</Property>-->
+	</Properties>
+	
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+		</Console>
+		<RollingFile name="File"
+					 filename="${env:BASE_DIR}/log/terraform/multicloud-daily.log"
+					 filePattern="${env:BASE_DIR}/log/terraform/multicloud-daily. %d{yyyyMMdd}.log">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${env:BASE_DIR}/log/terraform/">
+					<IfFileName glob="*.log" />
+					<IfLastModified age="30d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+	
+	<Loggers>
+		<Logger name="com.mcmp.multiCloud" level="DEBUG" additivity="false">
+			<AppenderRef ref="File" />
+		</Logger>
+		<Logger name="org.springframework" level="INFO">
+			<AppenderRef ref="File" />
+		</Logger>
+		
+		<Logger name="org.apache.commons" level="off" />
+		<Logger name="org.hibernate.validator" level="off" />
+		
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+	</Loggers>
+</Configuration>

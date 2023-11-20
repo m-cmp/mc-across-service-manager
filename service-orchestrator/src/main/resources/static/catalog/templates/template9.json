@@ -1,0 +1,28 @@
+{
+    "service_template_id" : "9",
+    "service_template_name" : "GCP_compute_and_AZURE_compute_across_service",
+    "service_template_contents" : "GCP compute와 AZURE compute vpn-tunnel 연계서비스",
+    "across_service_type" : "vpn_tunnel",
+    "cloud_provider" : ["GCP", "AZURE"],
+    "tf_path" : {
+        "vpc" : {
+            "GCP" : "/terraform/source/gcp/vpc.tf",
+            "AZURE" : "/terraform/source/azure/vpc.tf"
+        },
+        "vgw" : {
+            "AZURE" : "/terraform/source/azure/vgw.tf"
+        },
+        "vm" : {
+            "GCP" : "/terraform/source/gcp/vm.tf",
+            "AZURE" : "/terraform/source/azure/vm.tf"
+        },
+        "vpn" : {
+            "GCP" : "/terraform/source/gcp/vpn.tf",
+            "AZURE" : "/terraform/source/azure/vpn.tf"
+        }
+    },
+    "application" : {
+        "GCP" : "WEB", 
+        "AZURE" : "DB"
+    }
+}

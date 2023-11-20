@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration>
+<Configuration status="info" monitorInterval="30">
+	<profile>dev</profile>
+	<Properties>
+		<Property name="LOG_FORMAT">%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Property>
+		<!--<Property name="BASE_DIR">${BASE_DIR}/log/orchestrator</Property>-->
+	</Properties>
+
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+		</Console>
+		<RollingFile name="File"
+					 filename="${env:BASE_DIR}/log/orchestrator/orchestrator-daily.log"
+					 filePattern="${env:BASE_DIR}/log/orchestrator/orchestrator-daily. %d{yyyyMMdd}.log">
+			<PatternLayout pattern="${LOG_FORMAT}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="${env:BASE_DIR}/log/orchestrator">
+					<IfFileName glob="*.log" />
+					<IfLastModified age="30d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+	
+	<Loggers>
+		<Logger name="com.mcmp.orchestrator" level="DEBUG" additivity="false">
+			<AppenderRef ref="File" />
+		</Logger>
+		<Logger name="org.springframework" level="INFO">
+			<AppenderRef ref="File" />
+		</Logger>
+		<Logger name="org.springframework" level="ERROR">
+			<AppenderRef ref="File" />
+		</Logger>
+		<Logger name="org.springframework" level="WARN">
+			<AppenderRef ref="File" />
+		</Logger>
+		<Logger name="org.apache.commons" level="off" />
+		<Logger name="org.hibernate.validator" level="off" />
+		
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+	</Loggers>
+</Configuration>

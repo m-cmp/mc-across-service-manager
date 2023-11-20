@@ -1,0 +1,18 @@
+{
+    "service_template_id" : "1",
+    "service_template_name" : "AWS_EC2_instance_with_webserver",
+    "service_template_contents" : "AWS의 EC2 인스턴스에 웹서버, DB",
+    "across_service_type" : "none",
+    "cloud_provider" : ["AWS"],
+    "tf_path" : {
+        "vpc" : {
+            "AWS" : "/terraform/source/aws/vpc.tf"
+        },
+        "vm" : {
+            "AWS" : "/terraform/source/aws/vm.tf"
+        }
+    },
+    "application" : {
+        "AWS" : "WEB+DB"
+    }
+}

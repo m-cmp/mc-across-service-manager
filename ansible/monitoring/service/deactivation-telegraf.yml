@@ -1,0 +1,9 @@
+---
+- name: management-state
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: deactivate telegraf
+      service:
+        name: telegraf
+        state: stopped                                 
