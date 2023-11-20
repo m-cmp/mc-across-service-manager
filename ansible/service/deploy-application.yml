@@ -1,0 +1,128 @@
+---
+- name: deploy service
+  hosts: all
+  become: true
+  become_user: root
+  gather_facts: false
+  tasks:
+    - name: install essential package
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/install-essential.sh"
+        dest: /usr/local/sbin/
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: run script
+      shell:
+        cmd: | 
+          /usr/local/sbin/install-essential.sh
+
+    - name: Gathering Facts
+      setup:
+          
+    - block:     
+        - name: nodejs on ubuntu
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/ubuntu-nodejs.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/ubuntu-nodejs.sh
+        
+        - name: mongo-ubuntu20.04
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/ubuntu20.04-mongo.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+          when: ansible_distribution_version == "20.04"
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/ubuntu20.04-mongo.sh
+          when: ansible_distribution_version == "20.04"
+
+        - name: mongo-ubuntu22.04
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/ubuntu22.04-mongo.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+          when: ansible_distribution_version == "22.04"
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/ubuntu22.04-mongo.sh
+          when: ansible_distribution_version == "22.04"
+    
+      when: ansible_distribution == "Ubuntu"
+
+    - block:  
+        - name: nodejs on centos
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/centos-nodejs.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+        
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/centos-nodejs.sh
+
+        - name: mongo-centos
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/centos-mongo.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/centos-mongo.sh
+
+      when: ansible_distribution == "CentOS"
+
+    - name: copy web project
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/webserver.zip"
+        dest: /root/
+
+    - name: create dir
+      file:
+        path: /root/webserver/
+        state: directory
+
+    - name: unzip web project
+      unarchive:
+        src: /root/webserver.zip
+        dest: /root/webserver/
+        remote_src: yes
+    
+    - name: install web 
+      shell: |
+        npm install
+      args:
+        chdir: /root/webserver
+ 
+    - name: install client
+      shell: |
+        npm install
+      args:
+        chdir: /root/webserver/client
+
+    - name: copy conf file
+      include_tasks: "{{ lookup('env', 'BASE_DIR')}}/ansible/service/copyWebconf.yml"

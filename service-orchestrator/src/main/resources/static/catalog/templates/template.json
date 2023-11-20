@@ -6,10 +6,10 @@
     "cloud_provider" : ["AWS"],
     "tf_path" : {
         "vpc" : {
-            "AWS" : "/root/mcmp/multicloud/source/aws/vpc.tf"
+            "AWS" : "/terraform/source/aws/vpc.tf"
         },
         "vm" : {
-            "AWS" : "/root/mcmp/multicloud/source/aws/vm.tf"
+            "AWS" : "/terraform/source/aws/vm.tf"
         }
     },
     "application" : {

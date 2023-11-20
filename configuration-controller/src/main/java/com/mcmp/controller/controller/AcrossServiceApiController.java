@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/controller")
 @AllArgsConstructor
-@Tag(name="Application-service", description="Application-service API")
+@Tag(name="across-service", description="Across-service API")
 @Slf4j
 public class AcrossServiceApiController {
 

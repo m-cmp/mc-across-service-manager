@@ -1,5 +1,6 @@
 package com.mcmp.controller.conf;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -12,6 +13,8 @@ import java.util.Arrays;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+	@Value("${web.ip}") private String ip;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -24,15 +27,14 @@ public class WebConfig implements WebMvcConfigurer {
         CorsConfiguration configuration = new CorsConfiguration();
         // 로컬 React에서 오는 요청은 CORS 허용해준다.
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://10.10.4.69:5173",
-                "http://10.10.4.69:8090",
-                "http://0.0.0.0:5173",
-                "http://10.10.4.76:5173",
-                "http://10.10.4.76:8090",
+                "http://127.0.0.1:8090",
                 "http://127.0.0.1:5173",
                 "http://127.0.0.1:4173",
-                "http://34.64.91.20:4173",
-                "http://34.64.91.20:5173"
+                "http://0.0.0.0:8090",
+                "http://0.0.0.0:5173",
+                "http://0.0.0.0:4173",
+                "http://"+ip+":4173",
+				"http://"+ip+":5173"
         ));// 해당 ip만 응답
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "PATCH"));// 해당메소드만응답하겠다
         configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With"));// 해당 헤더의 응답만허용

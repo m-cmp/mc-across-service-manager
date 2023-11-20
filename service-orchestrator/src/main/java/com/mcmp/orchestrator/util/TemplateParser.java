@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 // import java.io.File;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class TemplateParser {
 	
+	@Value("${templates.base-dir}")
+    private String baseDir;
+	
 	/**
 	 * 서비스/연계서비스 생성 시 파싱
 	 * @param TemplateDTO template
@@ -39,11 +43,11 @@ public class TemplateParser {
 	    	csp = csp.toLowerCase();
 	    	uuid = csp + CommonUtil.makeUUID();
 	    	TfPathDTO tfPath = TfPathDTO.builder()
-	    			.vpc(template.getTfPath().getVpc().getOrDefault(csp.toUpperCase(), ""))
-	    			.vm(template.getTfPath().getVm().getOrDefault(csp.toUpperCase(), ""))
-	    			.vgw(ObjectUtils.isEmpty(template.getTfPath().getVgw())? "" : template.getTfPath().getVgw().getOrDefault(csp.toUpperCase(), ""))
-	    			.vpn(ObjectUtils.isEmpty(template.getTfPath().getVpn())? "" : template.getTfPath().getVpn().getOrDefault(csp.toUpperCase(), ""))
-	    			.gslb(ObjectUtils.isEmpty(template.getTfPath().getGslb())? "" : template.getTfPath().getGslb().getOrDefault(csp.toUpperCase(), ""))
+	    			.vpc(baseDir + template.getTfPath().getVpc().getOrDefault(csp.toUpperCase(), ""))
+	    			.vm(baseDir + template.getTfPath().getVm().getOrDefault(csp.toUpperCase(), ""))
+	    			.vgw(ObjectUtils.isEmpty(template.getTfPath().getVgw())? "" : baseDir + template.getTfPath().getVgw().getOrDefault(csp.toUpperCase(), ""))
+	    			.vpn(ObjectUtils.isEmpty(template.getTfPath().getVpn())? "" : baseDir + template.getTfPath().getVpn().getOrDefault(csp.toUpperCase(), ""))
+	    			.gslb(ObjectUtils.isEmpty(template.getTfPath().getGslb())? "" : baseDir + template.getTfPath().getGslb().getOrDefault(csp.toUpperCase(), ""))
 	    			.build();
 	    			
 	    	ServiceInstanceDTO service = ServiceInstanceDTO.builder()
@@ -79,11 +83,11 @@ public class TemplateParser {
 	    	}
 	    	
 	    	TfPathDTO tfPath = TfPathDTO.builder()
-	    			.vpc(template.getTfPath().getVpc().getOrDefault(csp.toUpperCase(), ""))
-	    			.vm(template.getTfPath().getVm().getOrDefault(csp.toUpperCase(), ""))
-	    			.vgw(ObjectUtils.isEmpty(template.getTfPath().getVgw())? "" : template.getTfPath().getVgw().getOrDefault(csp.toUpperCase(), ""))
-	    			.vpn(ObjectUtils.isEmpty(template.getTfPath().getVpn())? "" : template.getTfPath().getVpn().getOrDefault(csp.toUpperCase(), ""))
-	    			.gslb(ObjectUtils.isEmpty(template.getTfPath().getGslb())? "" : template.getTfPath().getGslb().getOrDefault(csp.toUpperCase(), ""))
+	    			.vpc(baseDir + template.getTfPath().getVpc().getOrDefault(csp.toUpperCase(), ""))
+	    			.vm(baseDir + template.getTfPath().getVm().getOrDefault(csp.toUpperCase(), ""))
+	    			.vgw(ObjectUtils.isEmpty(template.getTfPath().getVgw())? "" : baseDir + template.getTfPath().getVgw().getOrDefault(csp.toUpperCase(), ""))
+	    			.vpn(ObjectUtils.isEmpty(template.getTfPath().getVpn())? "" : baseDir + template.getTfPath().getVpn().getOrDefault(csp.toUpperCase(), ""))
+	    			.gslb(ObjectUtils.isEmpty(template.getTfPath().getGslb())? "" : baseDir + template.getTfPath().getGslb().getOrDefault(csp.toUpperCase(), ""))
 	    			.build();
 	    			
 	    	ServiceInstanceDTO service = ServiceInstanceDTO.builder()
@@ -112,8 +116,8 @@ public class TemplateParser {
 			csp = csp.toLowerCase();
 			uuid = csp + CommonUtil.makeUUID();
 			TfPathDTO tfPath = TfPathDTO.builder()
-					.vpc(template.getTfPath().getVpc().getOrDefault(csp.toUpperCase(), ""))
-					.vm(template.getTfPath().getVm().getOrDefault(csp.toUpperCase(), ""))
+					.vpc(baseDir + template.getTfPath().getVpc().getOrDefault(csp.toUpperCase(), ""))
+					.vm(baseDir + template.getTfPath().getVm().getOrDefault(csp.toUpperCase(), ""))
 					.build();
 					
 			service = ServiceInstanceDTO.builder()

@@ -6,10 +6,10 @@
     "cloud_provider" : ["AZURE"],
     "tf_path" : {
         "vpc" : {
-            "AZURE" : "/root/mcmp/multicloud/source/azure/vpc.tf"
+            "AZURE" : "/terraform/source/azure/vpc.tf"
         },
         "vm" : {
-            "AZURE" : "/root/mcmp/multicloud/source/azure/vm.tf"
+            "AZURE" : "/terraform/source/azure/vm.tf"
         }
     },
     "application" : {

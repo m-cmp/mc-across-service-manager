@@ -8,7 +8,10 @@ rest-api: # rest-api 주소
     url: http://${IP}:8080
     username: airflow
     password: airflow
-
+    
+templates:
+  base-dir: ${BASE_DIR}
+  
 server:
   port: 8090
 
@@ -56,6 +59,9 @@ springdoc:
       
 logging:
   config: classpath:log4j2-dev.xml
+  
+web:
+  ip: ${IP}
 
 
       

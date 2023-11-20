@@ -1,0 +1,36 @@
+---
+- name: activate db
+  hosts: all 
+  become: true
+  gather_facts: false
+  tasks:
+    - name: start mongod
+      service:
+        name: mongod
+        state: started
+
+    - name: create mongodb root user
+      mongodb_user:
+        login_port: "27017"
+        database : "admin"
+        name : ""
+        password : ""
+        roles: "root"
+        state: present
+
+    - name: create user
+      mongodb_user:
+        login_host: "localhost"
+        login_port: 27017
+        login_user: ""
+        login_password: ""
+        database: ""
+        name: ""
+        password: ""
+        roles:
+          - db: admin
+            role: readWrite
+          - db: 
+            role: readWrite
+        state: "present"
+   

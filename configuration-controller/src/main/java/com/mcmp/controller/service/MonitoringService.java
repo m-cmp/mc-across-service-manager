@@ -11,8 +11,11 @@ import com.mcmp.controller.repository.InstanceRepository;
 import com.mcmp.controller.util.CommandExecutor;
 import com.mcmp.controller.util.CommonUtil;
 import com.mcmp.controller.util.PlaybookPath;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,8 @@ import static com.mcmp.controller.util.JsonUtil.readResult;
 @Service
 @Slf4j
 @Transactional
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class MonitoringService {
 
     @Autowired
@@ -43,6 +48,8 @@ public class MonitoringService {
     @Autowired
     private CommandExecutor commandExecutor;
 
+    @Value("${ansible-playbook.base-dir}")
+    public String baseDir;
 
     /**
     *
@@ -52,6 +59,8 @@ public class MonitoringService {
     *
     **/
     public Object deployAgent(List<InstanceDTO> instanceList) {
+
+        System.out.println(baseDir);
 
         // handling null parameter
         for(InstanceDTO instanceDTO : instanceList){
@@ -81,7 +90,7 @@ public class MonitoringService {
         String ipAddresses = str.toString();
 
         // make command and execute ansible
-        String[] command = {"ansible-playbook", "-i", ipAddresses, PlaybookPath.INSTALLATION_TELEGRAF};
+        String[] command = {"ansible-playbook", "-i", ipAddresses, baseDir + PlaybookPath.INSTALLATION_TELEGRAF};
         String output = commandExecutor.executor(command);
 
         var resultDTO = readResult(output, ResultDTO.class);
@@ -146,9 +155,9 @@ public class MonitoringService {
         // make variable ansible playbook path
         String path;
         if ("Y".equals(instanceDTO.getAgentActivateYN())){
-            path = PlaybookPath.ACTIVATION_TELEGRAF_SERVICE;
+            path = baseDir + PlaybookPath.ACTIVATION_TELEGRAF_SERVICE;
         } else {
-            path = PlaybookPath.DEACTIVATION_TELEGRAF_SERVICE;
+            path = baseDir + PlaybookPath.DEACTIVATION_TELEGRAF_SERVICE;
         }
 
         String output = commandExecutor.executePlaybook(ip, path);
@@ -214,14 +223,14 @@ public class MonitoringService {
         // get playbook path
         String path = null;
         if(isActivation && !acrossType){
-            path = PlaybookPath.ACTIVATION_TELEGRAF_ACROSS_SERVICE_VPN;
+            path = baseDir + PlaybookPath.ACTIVATION_TELEGRAF_ACROSS_SERVICE_VPN;
         } else if(isActivation && acrossType){
-            path = PlaybookPath.ACTIVATION_TELEGRAF_ACROSS_SERVICE_GSLB;
+            path = baseDir + PlaybookPath.ACTIVATION_TELEGRAF_ACROSS_SERVICE_GSLB;
         } else {
-            path = PlaybookPath.DEACTIVATION_TELEGRAF_ACROSS_SERVICE;
+            path = baseDir + PlaybookPath.DEACTIVATION_TELEGRAF_ACROSS_SERVICE;
         }
 
-        //
+        // build ansible executing command
         String [] command = new String[5];
         int u = 0;
         command[u++] = path;
@@ -232,15 +241,16 @@ public class MonitoringService {
 
         log.info(command.toString());
 
+        // executing ansible
         String output = commandExecutor.executor(command);
 
+        // parsing ansible result
         output = output.replace(" ", "");
         String firstOutput = output.substring(0, output.lastIndexOf("\"custom_stats") - 3);
         String secondOutput = output.substring(output.lastIndexOf("\"custom_stats") - 2);
 
         List<String> stringList = List.of(firstOutput, secondOutput);
         List<ResultDTO> list = new ArrayList<>();
-
 
         for (String test : stringList) {
             for (AgentActivationParamDTO param : agentActivationParam) {
@@ -253,7 +263,6 @@ public class MonitoringService {
             }
         }
 
-
         for (ResultDTO resultDTO : list) {
             if (resultDTO.getFailures() != 0){
                 throw new RuntimeException("Monitoring-Agent Activation Failed");
@@ -262,7 +271,6 @@ public class MonitoringService {
             }
         }
 
-
         String activationStr = null;
         if(isActivation){
             activationStr = "Y";
@@ -270,9 +278,9 @@ public class MonitoringService {
             activationStr = "N";
         }
 
+        //update ansible result on database and return result
         List<InstanceEntity> entityList = instanceRepository
                 .findByIdList(agentActivationParam.stream().map(a -> a.getServiceInstanceId()).toList());
-
         for (InstanceEntity instance : entityList) {
             instance.setAgentActivateYN(activationStr);
             instanceRepository.save(instance);

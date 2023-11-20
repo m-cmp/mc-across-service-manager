@@ -1,0 +1,27 @@
+---
+- name: activation telegraf
+  hosts: all
+  become: yes
+  tasks:
+    - name: delete telegraf.conf 
+      file:
+        path: /etc/telegraf/telegraf.conf
+        state: absent
+      ignore_errors: true 
+
+    - name: register conf file
+      template:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/monitoring/across-service/telegraf.conf.j2"
+        dest: /etc/telegraf/telegraf.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+      notify:
+      - start telegraf
+
+  handlers:
+    - name: start telegraf
+      service:
+        name: telegraf
+        state: started

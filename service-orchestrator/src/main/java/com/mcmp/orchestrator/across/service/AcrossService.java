@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.mcmp.orchestrator.across.repository.AcrossServiceRepository;
@@ -42,6 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AcrossService {
 	
+	@Value("${templates.base-dir}")
+    private String baseDir;
 	private final TemplateParser parser;
 	private final AirflowTriggerAPI triggerAPI;
 	private final AcrossServiceRepository acrossRepository;
@@ -65,7 +68,7 @@ public class AcrossService {
 		}
 		
 		// 템플릿 파일 읽기
-		TemplateDTO template = JsonUtil.readJsonFiletoObject(templateEntity.getServiceTemplatePath(), TemplateDTO.class);
+		TemplateDTO template = JsonUtil.readJsonFiletoObject(baseDir + templateEntity.getServiceTemplatePath(), TemplateDTO.class);
 		log.info("[Across service instantiation] template : {}", template);
 
         if(ObjectUtils.isEmpty(template)) {
@@ -139,7 +142,7 @@ public class AcrossService {
 		}
 		
 		// 템플릿 파일 읽기
-		TemplateDTO template = JsonUtil.readJsonFiletoObject(templateEntity.getServiceTemplatePath(), TemplateDTO.class);
+		TemplateDTO template = JsonUtil.readJsonFiletoObject(baseDir + templateEntity.getServiceTemplatePath(), TemplateDTO.class);
 		log.info("[Across service instantiation with vpc id] template : {}", template);
 
         if(ObjectUtils.isEmpty(template)) {

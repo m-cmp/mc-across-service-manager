@@ -1,0 +1,46 @@
+---
+- name: data dump
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: data dump script
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/dump.sh"
+        dest: /usr/local/sbin
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: run script
+      shell:
+        cmd: |
+          /usr/local/sbin/dump.sh
+
+    - name: backup archive file compress
+      archive:
+        path: /root/mongo_backup/데이터베이스
+        dest: /root/mongo_backup/데이터베이스.tar or tar.gz
+      register: archive_result
+
+    - name: Set directory path
+      set_fact:
+        dir_path: "{{ lookup('env', 'BASE_DIR')}}/backup-file/{{ inventory_hostname }}-backup-{{ ansible_date_time.date }}"
+
+    - name: Create a directory
+      file:
+        path: "{{ dir_path }}"
+        state: directory
+      delegate_to: localhost
+
+    - name: Bring back_up file
+      synchronize:
+        src: "{{ archive_result.dest }}"
+        dest: "{{ dir_path }}/"
+        mode: pull
+    
+    - set_fact:
+        backup_file_path: "{{ dir_path}}/{{archive_result.dest | basename }}"
+
+    - debug:
+        msg: "{{ backup_file_path }}"

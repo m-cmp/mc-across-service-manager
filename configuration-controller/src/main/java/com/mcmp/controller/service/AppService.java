@@ -11,8 +11,10 @@ import com.mcmp.controller.util.CommandExecutor;
 import com.mcmp.controller.util.CommonUtil;
 import com.mcmp.controller.util.PlaybookPath;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,14 +38,20 @@ import java.util.NoSuchElementException;
 @Slf4j
 @Transactional
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class AppService {
 
     @Autowired
     private AppRepository appRepository;
+
     @Autowired
     private InstanceRepository instanceRepository;
+
     @Autowired
     private CommandExecutor commandExecutor;
+
+    @Value("${ansible-playbook.base-dir}")
+    public String baseDir;
 
 
     /**
@@ -71,7 +79,7 @@ public class AppService {
         // executing ansible playbook
         String output;
         if(findByServiceId == null){
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.DEPLOY_APPLICATION);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.DEPLOY_APPLICATION);
         } else {
             throw new GlobalExceptionHandler.DeployedException("Application already deployed");
         }
@@ -140,13 +148,13 @@ public class AppService {
         String output = null;
         if(appDTO.getApplicationActivateYN().equals("Y")){
             if(!appEntity.getApplicationActivateYN().equals("Y")){
-                output = commandExecutor.executePlaybook(ip, PlaybookPath.ACTIVATION_SERVICE);
+                output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.ACTIVATION_SERVICE);
             } else{
                 throw new GlobalExceptionHandler.DeployedException("Application already running");
             }
         } else {
             if(!appEntity.getApplicationActivateYN().equals("N")){
-                output = commandExecutor.executePlaybook(ip, PlaybookPath.DEACTIVATION_SERVICE);
+                output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.DEACTIVATION_SERVICE);
             } else {
                 throw new GlobalExceptionHandler.DeployedException("Application already not running");
             }
@@ -215,7 +223,7 @@ public class AppService {
         // parsing ansible result
         ResultDTO resultDTO = new ResultDTO();
         try {
-            String output = commandExecutor.executePlaybook(ip, PlaybookPath.HEALTH_CHECKING_SERVICE);
+            String output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.HEALTH_CHECKING_SERVICE);
             resultDTO = commandExecutor.parseResult(ip, resultDTO, output);
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -11,8 +11,10 @@ import com.mcmp.controller.repository.MigrationRepository;
 import com.mcmp.controller.util.CommandExecutor;
 import com.mcmp.controller.util.PlaybookPath;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ import java.util.NoSuchElementException;
 @Service
 @Slf4j
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class MigrationService {
 
     @Autowired
@@ -38,6 +41,9 @@ public class MigrationService {
     private InstanceRepository instanceRepository;
     @Autowired
     private CommandExecutor commandExecutor;
+
+    @Value("${ansible-playbook.base-dir}")
+    public String baseDir;
 
     /**
     *
@@ -59,7 +65,7 @@ public class MigrationService {
         String ip = "ubuntu@"+instance.getPublicIp();
 
         // executing ansible
-        String output = commandExecutor.executePlaybook(ip, PlaybookPath.MIGRATION_DUMP);
+        String output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.MIGRATION_DUMP);
 
         // parsing back-up File path
         String backFile = null;
@@ -123,7 +129,7 @@ public class MigrationService {
         log.info("BackupData_dir : {}", migrationDTO.getDumpFilePath());
 
         // executing ansible with ip and back-up file path
-        String output = commandExecutor.executeAnsiblePlaybook(ip, PlaybookPath.MIGRATION_RESTORE, variable);
+        String output = commandExecutor.executeAnsiblePlaybook(ip, baseDir + PlaybookPath.MIGRATION_RESTORE, variable);
 
         // parsing ansible result
         ResultDTO resultDTO = new ResultDTO();

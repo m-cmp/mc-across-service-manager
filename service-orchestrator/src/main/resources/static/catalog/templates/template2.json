@@ -6,10 +6,10 @@
     "cloud_provider" : ["GCP"],
     "tf_path" : {
         "vpc" : {
-            "GCP" : "/root/mcmp/multicloud/source/gcp/vpc.tf"
+            "GCP" : "/terraform/source/gcp/vpc.tf"
         },
         "vm" : {
-            "GCP" : "/root/mcmp/multicloud/source/gcp/vm.tf"
+            "GCP" : "/terraform/source/gcp/vm.tf"
         }
     },
     "application" : {

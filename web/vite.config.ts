@@ -31,6 +31,7 @@ const basicConfig = {
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
+  console.log(process.env);
   if (command === 'serve') {
     return {
       ...basicConfig,
@@ -38,18 +39,18 @@ export default defineConfig(({ command }) => {
         host: true,
         proxy: {
           '/api/v1/orchestrator': {
-            target: 'http://34.64.91.20:8090/',
+            target: 'http://0.0.0.0:8090/',
             secure: false,
           },
           '/api/v1/multi-cloud': {
-            target: 'http://34.64.91.20:8091/',
+            target: 'http://0.0.0.0:8091/',
             secure: false,
           },
           '/api/v1/controller': {
-            target: 'http://34.64.91.20:8092/',
+            target: 'http://0.0.0.0:8092/',
           },
           '/api/v1/bff': {
-            target: 'http://localhost:8095/',
+            target: 'http://0.0.0.0:8095/',
           },
         },
       },
@@ -61,23 +62,19 @@ export default defineConfig(({ command }) => {
       host: true,
       proxy: {
         '/api/v1/orchestrator': {
-          target: 'http://34.64.91.20:8090',
-          changeOrigin: false,
+          target: `http://${process.env.IP}:8090`,
           secure: false,
         },
         '/api/v1/multi-cloud': {
-          target: 'http://34.64.91.20:8091',
-          changeOrigin: false,
+          target: `http://${process.env.IP}:8091`,
           secure: false,
         },
         '/api/v1/controller': {
-          target: 'http://34.64.91.20:8092',
-          changeOrigin: false,
+          target: `http://${process.env.IP}:8092`,
           secure: false,
         },
         '/api/v1/bff': {
-          target: 'http://34.64.91.20:8095',
-          changeOrigin: false,
+          target: `http://${process.env.IP}:8095`,
           secure: false,
         },
       },

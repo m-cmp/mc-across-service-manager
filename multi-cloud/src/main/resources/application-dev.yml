@@ -1,6 +1,6 @@
 # 사용자 정의 설정
 terraform: # rest-api 주소
-  path: ${BASE_DIR}/terraform/services
+  path: ${BASE_DIR}/terraform/services/
   
 aws:
   access_key: ${AWS_ACCESS_KEY_ID}

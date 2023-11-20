@@ -1,12 +1,16 @@
 # ==================================
 # Spring Boot Dev Config
 # ==================================
+
 server:
   port: 8092
 
+ansible-playbook:
+  base-dir: ${BASE_DIR}/ansible
+
 spring:
   pid:
-    file: /root/mcmp/pid/configcontroller
+    file:
   config:
     activate:
       on-profile: dev
@@ -50,3 +54,6 @@ springdoc:
 
 logging:
   config: classpath:log4j2-dev.xml
+
+web:
+  ip: ${IP}

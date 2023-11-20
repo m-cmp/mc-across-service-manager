@@ -95,7 +95,6 @@ public class CommonUtil {
                 throw new Exception("ERR:-6, reqDate을 확인하신후 다시 시도해주십시오.");
             }
         }
-
         return syear+smonth;
     }
 

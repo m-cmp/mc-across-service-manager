@@ -1,0 +1,29 @@
+---
+- name: Web activation
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: register mongourl
+      template:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/across-service/dev.js.j2"
+        dest: "/root/webserver/server/config/dev.js"
+
+    - name: run node for db
+      shell:
+        cmd: |
+          pm2 start npm --name "nodedb" -- run start
+      args:
+        chdir: /root/webserver
+
+    - name: start web
+      shell:
+        cmd: |
+          pm2 start npm --name "webapp" -- run start
+      args:
+        chdir: /root/webserver/client
+
+    - name: start nginx
+      service:
+        name: nginx
+        state: restarted

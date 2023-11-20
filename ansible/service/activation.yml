@@ -1,0 +1,30 @@
+---
+- name: Web activation
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+      
+    - name: activate-db
+      include_tasks: "{{ lookup('env', 'BASE_DIR')}}/ansible/service/create-account.yml"
+
+    - name: register mongourls
+      template:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/service/dev.js"
+        dest: "/root/webserver/server/config/dev.js"
+
+    - name: run node for db
+      shell: pm2 start npm --name "nodedb" -- run start
+      args:
+        chdir: /root/webserver/
+
+    - name: start web
+      shell:
+        pm2 start npm --name "webapp" -- run start
+      args:
+        chdir: /root/webserver/client
+
+    - name: start nginx
+      service:
+        name: nginx
+        state: restarted      

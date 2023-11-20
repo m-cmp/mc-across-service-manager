@@ -1,0 +1,19 @@
+---
+- name: terminate web
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: web terminate script send
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/webTerminate.sh"
+        dest: /usr/local/sbin
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: run script
+      shell:
+        cmd: |
+          /usr/local/sbin/webTerminate.sh
+

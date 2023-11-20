@@ -1,0 +1,52 @@
+---
+- name: telegraf installation
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: install essential package
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/install-essential.sh"
+        dest: /usr/local/sbin/
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: run script
+      shell:
+        cmd: |
+          /usr/local/sbin/install-essential.sh
+
+    - name: gather fact
+      setup:
+
+    - block:
+        - name: telegraf install on centos
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/telegraf-centos.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/telegraf-centos.sh
+      when: ansible_distribution == "CentOS"
+
+    - block:
+        - name: telegraf install on ubuntu
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/telegraf-ubuntu.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/telegraf-ubuntu.sh
+
+      when: ansible_distribution == "Ubuntu"

@@ -1,0 +1,78 @@
+---
+- name: deploy db
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+   
+    - name: install essential package
+      copy:
+        src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/install-essential.sh"
+        dest: /usr/local/sbin/
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: run script
+      shell:
+        cmd: |
+          /usr/local/sbin/install-essential.sh
+    
+    - name: gather facts
+      setup:
+
+    - block:
+        - name: mongo-ubuntu20.04
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/ubuntu20.04-mongo.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+          when: ansible_distribution_version == "20.04"
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/ubuntu20.04-mongo.sh
+          when: ansible_distribution_version == "20.04"
+
+        - name: mongo-ubuntu22.04
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/ubuntu22.04-mongo.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+          when: ansible_distribution_version == "22.04"
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/ubuntu22.04-mongo.sh
+          when: ansible_distribution_version == "22.04"
+
+      when: ansible_distribution == "Ubuntu"
+
+    - block:
+        - name: mongo-centos
+          copy:
+            src: "{{ lookup('env', 'BASE_DIR')}}/ansible/script/centos-mongo.sh"
+            dest: /usr/local/sbin/
+            owner: root
+            group: root
+            mode: '0755'
+
+        - name: run script
+          shell:
+            cmd: |
+              /usr/local/sbin/centos-mongo.sh
+
+      when: ansible_distribution == "CentOS"
+
+    - name: revision conf
+      lineinfile:
+        path: /etc/mongod.conf
+        regexp: '^\s*bindIp:.*$'
+        line: '  bindIp: 0.0.0.0'
+

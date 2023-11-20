@@ -11,8 +11,10 @@ import com.mcmp.controller.util.CommandExecutor;
 import com.mcmp.controller.util.CommonUtil;
 import com.mcmp.controller.util.PlaybookPath;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class AcrossService {
 
     @Autowired
@@ -39,6 +42,9 @@ public class AcrossService {
 
     @Autowired
     private CommandExecutor commandExecutor;
+
+    @Value("${ansible-playbook.base-dir}")
+    public String baseDir;
 
     /**
     *
@@ -70,11 +76,11 @@ public class AcrossService {
         String output;
         // executing ansible with ip and proper playbook by if condition
         if (appType.equals("WEB") && findByServiceId == null) {
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.WEB_DEPLOY);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.WEB_DEPLOY);
         } else if (appType.equals("DB")){
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.DB_DEPLOY);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.DB_DEPLOY);
         } else {
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.DEPLOY_APPLICATION);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.DEPLOY_APPLICATION);
         }
 
         // parsing ansible-result
@@ -186,17 +192,17 @@ public class AcrossService {
         // make vpn or gslb activation ansible command
         String[] activationCommand;
         if(!acrossType){
-            activationCommand = new String[] {PlaybookPath.ACTIVATION_ACROSS_SERVICE_VPN, dbIp, webIp, PrivateIpDb};
+            activationCommand = new String[] {baseDir + PlaybookPath.ACTIVATION_ACROSS_SERVICE_VPN, dbIp, webIp, PrivateIpDb};
         }else {
-            activationCommand = new String[] {PlaybookPath.ACTIVATION_ACROSS_SERVICE_GSLB, serviceIp};
+            activationCommand = new String[] {baseDir + PlaybookPath.ACTIVATION_ACROSS_SERVICE_GSLB, serviceIp};
         }
 
         // make vpn or gslb deactivation ansible command
         String[] deactivationCommand;
         if(!acrossType){
-            deactivationCommand = new String[] {PlaybookPath.DEACTIVATION_ACROSS_SERVICE_VPN, dbIp, webIp};
+            deactivationCommand = new String[] {baseDir + PlaybookPath.DEACTIVATION_ACROSS_SERVICE_VPN, dbIp, webIp};
         } else {
-            deactivationCommand = new String[] {PlaybookPath.DEACTIVATION_ACROSS_SERVICE_GSLB, serviceIp};
+            deactivationCommand = new String[] {baseDir + PlaybookPath.DEACTIVATION_ACROSS_SERVICE_GSLB, serviceIp};
         }
 
         log.info("activation-command : {}", Arrays.toString(activationCommand));
@@ -279,11 +285,11 @@ public class AcrossService {
         // executing ansible
         String output;
         if (appType.equals("WEB")) {
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.HEALTH_CHECKING_WEB);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.HEALTH_CHECKING_WEB);
         } else if (appType.equals("DB")){
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.HEALTH_CHECKING_DB);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.HEALTH_CHECKING_DB);
         } else {
-            output = commandExecutor.executePlaybook(ip, PlaybookPath.HEALTH_CHECKING_SERVICE);
+            output = commandExecutor.executePlaybook(ip, baseDir + PlaybookPath.HEALTH_CHECKING_SERVICE);
         }
 
         // parsing ansible result

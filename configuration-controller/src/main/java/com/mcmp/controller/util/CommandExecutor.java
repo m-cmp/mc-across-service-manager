@@ -41,7 +41,7 @@ public class CommandExecutor {
     public String executePlaybook(String ip, String playbookPath) {
         try {
             String[] command = {"ansible-playbook", "-i", ip + ",", playbookPath};
-            log.info(playbookPath);
+            log.info("playbookPath : {}", playbookPath);
             log.info(ip);
             log.info(Arrays.toString(command));
             ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -93,6 +93,7 @@ public class CommandExecutor {
         try {
             // Prepare the command
             String[] command = {"ansible-playbook", "-i", ip + ",", playbookPath, "-e", variable};
+            log.info("playbookPath : {}", playbookPath);
 
             // Create ProcessBuilder instance and start the process
             ProcessBuilder processBuilder = new ProcessBuilder(command);

@@ -3,7 +3,7 @@
 # ==================================
 server:
   port: 8095
-
+  
 spring:
   config:
     activate:
@@ -20,7 +20,7 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        format_sql: false #To beautify or pretty print the SQL
+        format_sql: false #To beautify or pretty print the SQL   
   messages:
     basename: messages
     encoding: utf-8
@@ -30,7 +30,7 @@ spring:
   web:
     resources:
       add-mappings: false
-
+      
 influxdb:
   url: http://${IP}:8086/
   token: ${INFLUXDB_TOKEN}
@@ -55,3 +55,6 @@ springdoc:
 #Logging
 logging:
   config: classpath:log4j2-dev.xml
+
+web:
+  ip: ${IP}

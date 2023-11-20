@@ -6,19 +6,19 @@
     "cloud_provider" : ["GCP", "AZURE"],
     "tf_path" : {
         "vpc" : {
-            "GCP" : "/root/mcmp/multicloud/source/gcp/vpc.tf",
-            "AZURE" : "/root/mcmp/multicloud/source/azure/vpc.tf"
+            "GCP" : "/terraform/source/gcp/vpc.tf",
+            "AZURE" : "/terraform/source/azure/vpc.tf"
         },
         "vgw" : {
-            "AZURE" : "/root/mcmp/multicloud/source/azure/vgw.tf"
+            "AZURE" : "/terraform/source/azure/vgw.tf"
         },
         "vm" : {
-            "GCP" : "/root/mcmp/multicloud/source/gcp/vm.tf",
-            "AZURE" : "/root/mcmp/multicloud/source/azure/vm.tf"
+            "GCP" : "/terraform/source/gcp/vm.tf",
+            "AZURE" : "/terraform/source/azure/vm.tf"
         },
         "vpn" : {
-            "GCP" : "/root/mcmp/multicloud/source/gcp/vpn.tf",
-            "AZURE" : "/root/mcmp/multicloud/source/azure/vpn.tf"
+            "GCP" : "/terraform/source/gcp/vpn.tf",
+            "AZURE" : "/terraform/source/azure/vpn.tf"
         }
     },
     "application" : {

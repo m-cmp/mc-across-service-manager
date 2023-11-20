@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/controller")
 @RequiredArgsConstructor
-@Tag(name="Application-service", description="Application-service API")
+@Tag(name="single-service", description="service API")
 @Slf4j
 public class ServiceApiController {
 

@@ -3,7 +3,7 @@
 	<profile>dev</profile>
 	<Properties>
 		<Property name="LOG_FORMAT">%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Property>
-		<Property name="BASE_DIR">/root/mcmp/log/configcontroller</Property>
+<!--		<Property name="BASE_DIR">/root/mcmp/log/configcontroller</Property>-->
 	</Properties>
 	
 	<Appenders>
@@ -11,14 +11,14 @@
 			<PatternLayout pattern="${LOG_FORMAT}" />
 		</Console>
 		<RollingFile name="File"
-					 filename="${BASE_DIR}/confController-daily.log"
-					 filePattern="${BASE_DIR}/confController-daily. %d{yyyyMMdd}.log">
+					 filename="${env:BASE_DIR}/log/confController/confController-daily.log"
+					 filePattern="${env:BASE_DIR}/log/confController/confController-daily.%d{yyyyMMdd}.log">
 			<PatternLayout pattern="${LOG_FORMAT}" />
 			<Policies>
 				<TimeBasedTriggeringPolicy />
 			</Policies>
 			<DefaultRolloverStrategy>
-				<Delete basePath="${BASE_DIR}">
+				<Delete basePath="${env:BASE_DIR}/log/confController/">
 					<IfFileName glob="*.log" />
 					<IfLastModified age="30d" />
 				</Delete>

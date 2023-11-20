@@ -1,0 +1,14 @@
+---
+- name: web health check
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Get service facts
+      service_facts:
+
+    - name: Check if Nginx is active
+      fail:
+        msg: "Nginx service is not active"
+      when: ansible_facts.services['nginx.service'].state != 'running'
+

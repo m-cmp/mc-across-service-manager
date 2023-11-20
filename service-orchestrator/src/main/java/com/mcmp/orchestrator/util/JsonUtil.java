@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.springframework.core.io.ClassPathResource;
-
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 /**
  * Json 관련 Util
@@ -18,14 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JsonUtil {
 	
-//	private static final String BASE_PATH = new File("").getAbsolutePath();
-	
 	private JsonUtil() {
 		
 	}
-	
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    
+ 
     /**
      * json 파일을 읽어서 class로 변환
      * @param <T>
@@ -35,10 +29,10 @@ public class JsonUtil {
      * @throws IOException
      */
     public static <T> T readJsonFiletoObject(String templatePath, final Class<T> type) {
-    	
+
     	T obj = null;
     	File jsonTemplate = new File(templatePath);
-		
+
         try {
         	if(jsonTemplate.isFile()) {
         		obj =  objectMapper.readValue(jsonTemplate, type);

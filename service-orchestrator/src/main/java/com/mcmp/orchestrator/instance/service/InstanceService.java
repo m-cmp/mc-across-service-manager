@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.mcmp.orchestrator.dto.ServiceDTO;
@@ -43,6 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class InstanceService {
 
+	@Value("${templates.base-dir}")
+    private String baseDir;
 	private final TemplateParser parser;
 	private final AirflowTriggerAPI triggerAPI;
 	private final ServiceInfoRepository serviceRepository;
@@ -50,7 +53,7 @@ public class InstanceService {
 	private final AppRepository appRepository;
 	private final ServiceTemplateRepository templateRepository;
 	private final VpcRepository vpcRepository;
-
+	
 	/**
 	 * 서비스 생성
 	 * @param String templateId
@@ -65,7 +68,7 @@ public class InstanceService {
 			throw new InvalidInputException("invalid template id");
 		}
 		
-		TemplateDTO template = JsonUtil.readJsonFiletoObject(templateEntity.getServiceTemplatePath(), TemplateDTO.class);
+		TemplateDTO template = JsonUtil.readJsonFiletoObject(baseDir + templateEntity.getServiceTemplatePath(), TemplateDTO.class);
 	    log.info("[Service instantiation] template : {}", template);
 		
         if(ObjectUtils.isEmpty(template)) {
@@ -137,7 +140,7 @@ public class InstanceService {
 			throw new InvalidInputException("Vpc is already in use");
 		}
 		
-		TemplateDTO template = JsonUtil.readJsonFiletoObject(templateEntity.getServiceTemplatePath(), TemplateDTO.class);
+		TemplateDTO template = JsonUtil.readJsonFiletoObject(baseDir + templateEntity.getServiceTemplatePath(), TemplateDTO.class);
 	    log.info("[Service instantiation with vpc Id] template : {}, vpcList : {}", template, vpcList);
 	    
         if(ObjectUtils.isEmpty(template)) {
@@ -399,7 +402,7 @@ public class InstanceService {
 		serviceInfoEntity.setServiceStatus("MIGRATING");
 		serviceRepository.save(serviceInfoEntity);
 		
-		TemplateDTO template = JsonUtil.readJsonFiletoObject(templateEntity.getServiceTemplatePath(), TemplateDTO.class);
+		TemplateDTO template = JsonUtil.readJsonFiletoObject(baseDir + templateEntity.getServiceTemplatePath(), TemplateDTO.class);
 	    log.info("[Service migration] template : {}", template);
 		
 		// 새 서비스 인포 생성 
