@@ -1,4 +1,6 @@
 # M-CMP mc-across-service-manager
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fm-cmp%2Fmc-across-service-manager.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fm-cmp%2Fmc-across-service-manager?ref=badge_shield)
+
 
 This repository provides a Multi-Cloud mc-across-service-manager.
 
@@ -258,3 +260,7 @@ M-CMP의 mc-across-service-manager 서브시스템이 제공하는 기능은 다
 ## mc-across-service-manager 기여 방법
 
 Issues/Discussions/Ideas: Utilize issue of mc-across-service-manager
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fm-cmp%2Fmc-across-service-manager.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fm-cmp%2Fmc-across-service-manager?ref=badge_large)
